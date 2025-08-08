@@ -1,4 +1,5 @@
 mod session;
+mod parser;
 
 use std::sync::LazyLock;
 

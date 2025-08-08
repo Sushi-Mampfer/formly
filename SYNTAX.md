@@ -30,20 +30,20 @@ Shifts the character up by one position, this operations wraps.
 If the character is not alphanumeric nothing happens.
 
 ###### Examples
-a -> b
-Z -> A
-1 -> 2
-9 -> 0
+a -> b\
+Z -> A\
+1 -> 2\
+9 -> 0\
 
 #### shift down `<`
 Shifts the character down by one position, this operations wraps.
 If the character is not alphanumeric nothing happens.
 
 ###### Examples
-b -> a
-A -> Z
-2 -> 1
-0 -> 9
+b -> a\
+A -> Z\
+2 -> 1\
+0 -> 9\
 
 #### replace `x=y`
 Replaces all occurences of character x with character y.

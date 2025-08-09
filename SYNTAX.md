@@ -12,15 +12,15 @@ If no specific char or substring is selected.
 x wil be executed depending on the condition before the curly brackets.
 x can be one or multiple instructions.
 
-#### loop [x]
-The next instruction or block will be executed x times
+#### loop `[x]`
+The next block will be executed x times
 
-#### slice `(x..y)`
-The next instruction or block will only be applied on the substring from position x(inclusive) to position y(exclusive).
+#### slice `(x.y)`
+The next block will only be applied on the substring from position x(inclusive) to position y(exclusive).
 If x or y isn't present the substring will start at the beginning/end of the string.
 
 #### char `(x)`
-The next instruction or block will only be applied to the character at position x.
+The next block will only be applied to the character at position x.
 
 
 ## Operations

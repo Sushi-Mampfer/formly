@@ -9,7 +9,7 @@ use once_cell::sync::Lazy;
 use sqlx::SqlitePool;
 use tokio::net::TcpListener;
 
-use crate::session::{session_to_user, user_to_session};
+use crate::{parser::parse, session::{session_to_user, user_to_session}};
 
 static DB: LazyLock<SqlitePool> = LazyLock::new(|| SqlitePool::connect_lazy("sqlite://db.sqlit").unwrap());
 
@@ -18,8 +18,9 @@ static NONCE: Lazy<Nonce<U12>> = Lazy::new(|| Aes256Gcm::generate_nonce(OsRng));
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new();
+    dbg!(parse(String::from("abcABC123"), String::from("a=y")));
+    /* let app = Router::new();
 
     let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
-    axum::serve(listener, app).await.unwrap();
+    axum::serve(listener, app).await.unwrap(); */
 }

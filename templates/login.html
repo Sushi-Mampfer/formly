@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    {%- if let Some(err) = error -%}
+            <p>{{err}}</p>
+    {%- endif -%}
+    <form action="/login" method="post">
+        <input type="text" name="username" placeholder="username" required>
+        <input type="text" name="token" value="{{token}}" hidden>
+        <input type="text" value="{{challenge}}" readonly>
+        <input type="text" name="answer" placeholder="Challange transformed with your pattern" required>
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>

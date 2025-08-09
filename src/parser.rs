@@ -5,6 +5,7 @@ pub fn parse(mut data: String, pattern: String) -> Option<String> {
     let mut temp2 = String::new();
     let mut expect_block = false;
     let mut block = false;
+    let mut opened = 0;
     let mut range: Option<Range<usize>> = None;
     let mut repetitions: Option<usize> = None;
     let mut slice = false;
@@ -20,12 +21,15 @@ pub fn parse(mut data: String, pattern: String) -> Option<String> {
                 block = true;
                 expect_block = false;
             } else {
-                return None
+                return None;
             }
         } else if block {
             match c {
                 '}' => {
-                    if let Some(ref r) = range {
+                    if opened > 0 {
+                        opened -= 1;
+                        temp.push('}');
+                    } else if let Some(ref r) = range {
                         let mut chars: Vec<char> = data.chars().collect();
                         let slice: &[char] = &chars[r.clone()];
                         let value = parse(slice.iter().collect(), temp.clone())?;
@@ -36,7 +40,7 @@ pub fn parse(mut data: String, pattern: String) -> Option<String> {
                         temp = String::new();
                         range = None;
                     } else if let Some(r) = repetitions {
-                        for i in 0..r {
+                        for _ in 0..r {
                             data = parse(data.clone(), temp.clone())?;
                         }
 
@@ -47,6 +51,10 @@ pub fn parse(mut data: String, pattern: String) -> Option<String> {
                         return None;
                     }
                 }
+                '{' => {
+                    opened += 1;
+                    temp.push('{');
+                }
                 c => temp.push(c)
             }
         } else if slice {
@@ -56,9 +64,24 @@ pub fn parse(mut data: String, pattern: String) -> Option<String> {
                         if temp2.is_empty() {
                             temp2 = data.len().to_string();
                         }
-                        range = Some(temp.parse::<usize>().ok()?..temp2.parse::<usize>().ok()?)
+                        let mut start = temp.parse::<usize>().ok()?;
+                        let mut end = temp2.parse::<usize>().ok()?;
+                        if end < start {
+                            return None;
+                        }
+                        if start > data.len() - 1 {
+                            start = 0;
+                        }
+                        if end > data.len() {
+                            end = data.len();
+                        }
+                        range = Some(start..end)
                     } else {
-                        range = Some(temp.parse::<usize>().ok()?..temp.parse::<usize>().ok()? + 1);
+                        let mut index = temp.parse::<usize>().ok()?;
+                        if index > data.len() - 1 {
+                            index = data.len();
+                        }
+                        range = Some(index..index + 1);
                     }
                     dot = false;
                     temp = String::new();
@@ -112,12 +135,19 @@ pub fn parse(mut data: String, pattern: String) -> Option<String> {
                     if !verify_alphanumerical_char(c) {
                         return None;
                     }
+                    if !temp.is_empty() {
+                        return None;
+                    }
                     temp.push(c);
                 }
             }
         }
     }
-    Some(data)
+    if block || expect_block || slice || repeat || opened != 0 {
+        None
+    } else {
+        Some(data)
+    }
 }
 
 pub fn verify_alphanumerical(data: &String) -> bool {

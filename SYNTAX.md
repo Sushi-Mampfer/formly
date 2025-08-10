@@ -1,10 +1,9 @@
 # Syntax
-A quick reference to the syntax of tha available login rules.
+A quick reference to the syntax of the available login challenge transformation rules.
 
 ## Basics
-The pattern can have any length and is read and applied from left to right to the string.\
-If a pattern tries to access a character after the end of the string nothing happens.\
-If no specific char or substring is selected.
+The pattern can have any length and is read and applied from left to right to the challenge.\
+If a pattern tries to access a character after the end of the challenge nothing happens.\
 
 ## Controll flow
 

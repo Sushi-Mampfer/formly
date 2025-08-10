@@ -4,10 +4,19 @@ use hmac::{Mac};
 use rand::{rngs::StdRng, Rng, SeedableRng};
 use sqlx::{Row, query, Error::RowNotFound};
 
-use crate::{datatypes::{AppState, HmacSha256, LogInData, ALPHANUMERIC}, parser::parse, session::user_to_session, templates::LogInPage, SECRET};
+use crate::{datatypes::{AppState, HmacSha256, LogInData, ALPHANUMERIC}, parser::parse, session::{headers_to_user, user_to_session}, templates::LogInPage, SECRET};
 
-pub async fn login_api(state: State<AppState>, header: HeaderMap, Form(data): Form<LogInData>) -> Response {
-    let res = match query("SELECT pattern FROM users WHERE name = ?")
+pub async fn login_api(state: State<AppState>, headers: HeaderMap, Form(data): Form<LogInData>) -> Response {
+    let ip = match headers.get("X-Forwarded-For").expect("X-Forwarded-For header not found.").to_str() {
+        Ok(ip) => ip.to_string(),
+        _ => return (StatusCode::INTERNAL_SERVER_ERROR).into_response()
+    };
+
+    if let Some(_) = headers_to_user(headers) {
+        return Redirect::to("/dashboard").into_response()
+    }
+
+    let res = match query("SELECT pattern FROM users WHERE username = ?")
         .bind(data.username.clone())
         .fetch_one(&state.pool).await {
             Ok(r) => r,
@@ -16,8 +25,8 @@ pub async fn login_api(state: State<AppState>, header: HeaderMap, Form(data): Fo
         };
     if let Some(value) = parse(create_challenge(data.token), res.get("pattern")) {
         if value == data.answer {
-            if let Some(session) = user_to_session(data.username, String::from("127.0.0.1")) {
-                return (StatusCode::TEMPORARY_REDIRECT, [(LOCATION, "/dashboard"), (SET_COOKIE, &format!("session={}; Secure; HttpOnly; SameSite=Strict", session))]).into_response()
+            if let Some(session) = user_to_session(data.username, ip) {
+                return (StatusCode::SEE_OTHER, [(LOCATION, "/dashboard"), (SET_COOKIE, &format!("session={}; Secure; HttpOnly; SameSite=Strict; Max-Age:={}", session, 60*60*24*7))]).into_response()
             } else {
                 return create_login_template(Some(String::from("An unknown error occured")))
             }
@@ -26,7 +35,11 @@ pub async fn login_api(state: State<AppState>, header: HeaderMap, Form(data): Fo
     create_login_template(Some(String::from("Wrong answer")))
 }
 
-pub async fn login_page() -> Response {
+pub async fn login_page(headers: HeaderMap) -> Response {
+    if let Some(_) = headers_to_user(headers) {
+        return Redirect::to("/dashboard").into_response()
+    }
+
     create_login_template(None)
 }
 

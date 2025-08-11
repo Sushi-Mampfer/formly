@@ -53,3 +53,19 @@ Converts all alphabetical characters to uppercase.
 
 #### lowercase `_`
 Converts all alphabetical characters to lowercase
+
+## Examples
+#### 1
+**Pattern:** `[3]{>}`
+**Challenge:** `a9`
+**Answer:** `d2`
+
+#### 2
+**Pattern:** `_(1){^}`
+**Challenge:** `ABC`
+**Answer:** `aBc`
+
+#### 3
+**Pattern:** `a=3(0..3){>}`
+**Challenge:** `xyza`
+**Answer:** `abc6`

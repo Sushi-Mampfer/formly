@@ -1,27 +1,38 @@
 use askama::Template;
 
-#[derive(Template)]
-#[template(path="index.html")]
-pub struct IndexPage {
-    
-}
+use crate::datatypes::FormData;
 
 #[derive(Template)]
-#[template(path="signup.html")]
+#[template(path = "index.html")]
+pub struct IndexPage {}
+
+#[derive(Template)]
+#[template(path = "signup.html")]
 pub struct SignUpPage {
-    pub error: Option<String>
+    pub error: Option<String>,
 }
 
 #[derive(Template)]
-#[template(path="login.html")]
+#[template(path = "login.html")]
 pub struct LogInPage {
     pub error: Option<String>,
     pub token: String,
-    pub challenge: String
+    pub challenge: String,
 }
 
 #[derive(Template)]
-#[template(path="dashboard.html")]
+#[template(path = "dashboard.html")]
 pub struct DashboardPage {
-    pub username: String
+    pub username: String,
+}
+
+#[derive(Template)]
+#[template(path = "create.html")]
+pub struct CreateFormPage {}
+
+#[derive(Template)]
+#[template(path = "edit.html")]
+pub struct EditFormPage {
+    pub id: String,
+    pub data: FormData,
 }

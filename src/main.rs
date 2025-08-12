@@ -1,12 +1,15 @@
-mod session;
+mod datatypes;
 mod parser;
 mod routes;
-mod datatypes;
+mod session;
 mod templates;
 
 use std::sync::LazyLock;
 
-use aes_gcm::{aead::{consts::U12, OsRng}, AeadCore, Aes256Gcm, KeyInit, Nonce};
+use aes_gcm::{
+    AeadCore, Aes256Gcm, KeyInit, Nonce,
+    aead::{OsRng, consts::U12},
+};
 use axum::Router;
 use rand::RngCore;
 use sqlx::SqlitePool;
@@ -21,17 +24,17 @@ static SECRET: LazyLock<[u8; 32]> = LazyLock::new(|| {
     buffer
 });
 
-static CIPHER: LazyLock<Aes256Gcm> = LazyLock::new(|| Aes256Gcm::new(&Aes256Gcm::generate_key(OsRng)));
+static CIPHER: LazyLock<Aes256Gcm> =
+    LazyLock::new(|| Aes256Gcm::new(&Aes256Gcm::generate_key(OsRng)));
 static NONCE: LazyLock<Nonce<U12>> = LazyLock::new(|| Aes256Gcm::generate_nonce(OsRng));
 
 #[tokio::main]
 async fn main() {
     let state = AppState {
-        pool: SqlitePool::connect("sqlite://db.sqlite").await.unwrap()
+        pool: SqlitePool::connect("sqlite://db.sqlite").await.unwrap(),
     };
 
-    let app = Router::new()
-        .merge(combind_routes(state));
+    let app = Router::new().merge(combind_routes(state));
 
     let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
     axum::serve(listener, app).await.unwrap();

@@ -1,5 +1,8 @@
 use askama::Template;
-use axum::{http::HeaderMap, response::{Html, IntoResponse, Redirect, Response}};
+use axum::{
+    http::HeaderMap,
+    response::{Html, IntoResponse, Redirect, Response},
+};
 
 use crate::{session::headers_to_user, templates::DashboardPage};
 

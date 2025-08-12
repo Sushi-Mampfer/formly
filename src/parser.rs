@@ -55,7 +55,7 @@ pub fn parse(mut data: String, pattern: String) -> Option<String> {
                     opened += 1;
                     temp.push('{');
                 }
-                c => temp.push(c)
+                c => temp.push(c),
             }
         } else if slice {
             match c {
@@ -91,7 +91,7 @@ pub fn parse(mut data: String, pattern: String) -> Option<String> {
                 }
                 '.' => {
                     if dot {
-                        return None
+                        return None;
                     }
                     if temp.is_empty() {
                         temp = String::from("0");
@@ -121,8 +121,7 @@ pub fn parse(mut data: String, pattern: String) -> Option<String> {
             data = data.replace(&temp, &c.to_string());
             temp = String::new();
             equals = false;
-        }
-        else {
+        } else {
             match c {
                 '(' => slice = true,
                 '[' => repeat = true,
@@ -157,24 +156,30 @@ pub fn verify_alphanumerical(data: &String) -> bool {
 pub fn verify_alphanumerical_char(data: char) -> bool {
     match data {
         'a'..='z' | 'A'..='Z' | '0'..='9' => true,
-        _ => false
+        _ => false,
     }
-} 
+}
 
 pub fn shift_up(data: &mut String) {
-    *data = data.chars().map(|c| match c {
-        'z' => 'a',
-        'Z' => 'A',
-        '9' => '0',
-        c => char::from_u32(c as u32 + 1).unwrap()
-    }).collect();
+    *data = data
+        .chars()
+        .map(|c| match c {
+            'z' => 'a',
+            'Z' => 'A',
+            '9' => '0',
+            c => char::from_u32(c as u32 + 1).unwrap(),
+        })
+        .collect();
 }
 
 pub fn shift_down(data: &mut String) {
-    *data = data.chars().map(|c| match c {
-        'a' => 'z',
-        'A' => 'Z',
-        '0' => '9',
-        c => char::from_u32(c as u32 - 1).unwrap()
-    }).collect();
+    *data = data
+        .chars()
+        .map(|c| match c {
+            'a' => 'z',
+            'A' => 'Z',
+            '0' => '9',
+            c => char::from_u32(c as u32 - 1).unwrap(),
+        })
+        .collect();
 }

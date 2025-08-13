@@ -15,7 +15,7 @@ use serde_json::{from_str, to_string};
 use sqlx::{Row, error::DatabaseError, query, sqlite::SqliteError};
 
 use crate::{
-    datatypes::{AppState, FormData},
+    datatypes::{AppState, FormDefinition},
     session::headers_to_user,
     templates::{CreateFormPage, EditFormPage},
 };
@@ -31,7 +31,7 @@ pub async fn create_page(headers: HeaderMap) -> Response {
 pub async fn create_api(
     State(state): State<AppState>,
     headers: HeaderMap,
-    Json(data): Json<FormData>,
+    Json(data): Json<FormDefinition>,
 ) -> Response {
     let username = match headers_to_user(headers) {
         Some(u) => u,
@@ -107,7 +107,7 @@ pub async fn edit_api(
     State(state): State<AppState>,
     headers: HeaderMap,
     Path(id): Path<String>,
-    Json(data): Json<FormData>,
+    Json(data): Json<FormDefinition>,
 ) -> Response {
     let username = match headers_to_user(headers) {
         Some(u) => u,

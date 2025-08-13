@@ -31,36 +31,65 @@ pub struct LogInData {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct FormData {
+pub struct FormDefinition {
     pub name: String,
-    pub fields: Vec<Field>,
+    pub fields: Vec<FieldKind>,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub enum FieldKind {
+    Text(String, i32),
+    Email(String),
+    Number(String, i32, i32),
+    Multiple(String, Vec<String>),
 }
 
 #[derive(Serialize, Deserialize)]
-pub enum Field {
-    TextField(TextField),
-    NumberField(NumberField),
-    EmailField(EmailField),
-    MultipleField(MultipleField),
+pub struct FormSubmission {
+    pub values: Vec<FieldValue>,
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct TextField {
-    pub name: String,
+#[derive(Serialize, Deserialize, Clone)]
+pub enum FieldValue {
+    Text(String, String),
+    Email(String, String),
+    Number(String, i32),
+    Multiple(String, String),
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct NumberField {
-    pub name: String,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct EmailField {
-    pub name: String,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct MultipleField {
-    pub name: String,
-    pub choices: Vec<String>,
+impl FormDefinition {
+    pub fn validate_submission(self, submission: FormSubmission) -> bool {
+        if self.fields.len() != submission.values.len() {
+            return false;
+        }
+        for i in 0..self.fields.len() {
+            match (self.fields[i].clone(), submission.values[i].clone()) {
+                (FieldKind::Text(name1, maxlen), FieldValue::Text(name2, data)) => {
+                    if name1 != name2 {
+                        return false;
+                    }
+                    if data.len() > maxlen as usize {
+                        return false;
+                    }
+                }
+                (FieldKind::Email(name1), FieldValue::Email(name2, data)) => {
+                    if name1 != name2 {
+                        return false;
+                    }
+                }
+                (FieldKind::Number(name1, _, _), FieldValue::Number(name2, _)) => {
+                    if name1 != name2 {
+                        return false;
+                    }
+                }
+                (FieldKind::Multiple(name1, items), FieldValue::Multiple(name2, _)) => {
+                    if name1 != name2 {
+                        return false;
+                    }
+                }
+                _ => return false,
+            }
+        }
+        true
+    }
 }

@@ -15,9 +15,9 @@ use serde_json::{from_str, to_string};
 use sqlx::{Error, Row, error::DatabaseError, query, sqlite::SqliteError};
 
 use crate::{
-    datatypes::{AppState, FormDefinition},
+    datatypes::{AppState, FormDefinition, FormSubmission},
     session::headers_to_user,
-    templates::{CreateFormPage, EditFormPage},
+    templates::{CreateFormPage, EditFormPage, SubmissionsPage},
 };
 
 pub async fn create_page(headers: HeaderMap) -> Response {
@@ -154,13 +154,20 @@ pub async fn submissions_page(
         .fetch_one(&state.pool)
         .await;
 
-    match res {
-        Ok(_) => (),
+    let data = match res {
+        Ok(r) => r.get::<String, _>("data"),
         Err(Error::RowNotFound) => return StatusCode::NOT_FOUND.into_response(),
         _ => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
     };
 
-    let res = query("SELECT (time, data) FROM submissions WHERE form = ?")
+    let data: FormDefinition = match from_str(&data) {
+        Ok(d) => d,
+        _ => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+    };
+
+    let name = data.name;
+
+    let res = query("SELECT data FROM submissions WHERE form = ? ORDER BY time DESC")
         .bind(id)
         .fetch_all(&state.pool)
         .await;
@@ -170,7 +177,14 @@ pub async fn submissions_page(
         _ => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
     };
 
-    rows.iter().map(|r| r.get("time"));
+    let submissions: Vec<FormSubmission> = match rows
+        .iter()
+        .map(|r| from_str(r.get("data")))
+        .collect::<Result<_, _>>()
+    {
+        Ok(s) => s,
+        _ => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+    };
 
-    StatusCode::OK.into_response()
+    Html(SubmissionsPage { name, submissions }.render().unwrap()).into_response()
 }

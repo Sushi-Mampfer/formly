@@ -1,7 +1,17 @@
+use std::sync::LazyLock;
+
 use hmac::Hmac;
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 use sha2::Sha256;
 use sqlx::SqlitePool;
+
+pub static RE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+    r#" 	
+(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"#,
+).unwrap()
+});
 
 pub static ALPHANUMERIC: &[char] = &[
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
@@ -68,22 +78,33 @@ impl FormDefinition {
                     if name1 != name2 {
                         return false;
                     }
-                    if data.len() > maxlen as usize {
-                        return false;
+                    if maxlen != 0 {
+                        if data.len() > maxlen as usize {
+                            return false;
+                        }
                     }
                 }
                 (FieldKind::Email(name1), FieldValue::Email(name2, data)) => {
                     if name1 != name2 {
                         return false;
                     }
-                }
-                (FieldKind::Number(name1, _, _), FieldValue::Number(name2, _)) => {
-                    if name1 != name2 {
+                    if !RE.is_match(&data) {
                         return false;
                     }
                 }
-                (FieldKind::Multiple(name1, items), FieldValue::Multiple(name2, _)) => {
+                (FieldKind::Number(name1, min, max), FieldValue::Number(name2, data)) => {
                     if name1 != name2 {
+                        return false;
+                    }
+                    if data < min || data > max {
+                        return false;
+                    }
+                }
+                (FieldKind::Multiple(name1, items), FieldValue::Multiple(name2, data)) => {
+                    if name1 != name2 {
+                        return false;
+                    }
+                    if !items.contains(&data) {
                         return false;
                     }
                 }

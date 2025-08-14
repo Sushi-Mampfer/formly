@@ -12,7 +12,7 @@ use rand::{
     rng,
 };
 use serde_json::{from_str, to_string};
-use sqlx::{Row, error::DatabaseError, query, sqlite::SqliteError};
+use sqlx::{Error, Row, error::DatabaseError, query, sqlite::SqliteError};
 
 use crate::{
     datatypes::{AppState, FormDefinition},
@@ -136,4 +136,41 @@ pub async fn edit_api(
     }
 
     return StatusCode::OK.into_response();
+}
+
+pub async fn submissions_page(
+    State(state): State<AppState>,
+    headers: HeaderMap,
+    Path(id): Path<String>,
+) -> Response {
+    let username = match headers_to_user(headers) {
+        Some(u) => u,
+        None => return Redirect::to("/login").into_response(),
+    };
+
+    let res = query("SELECT data FROM forms WHERE id = ? AND user = ?")
+        .bind(&id)
+        .bind(&username)
+        .fetch_one(&state.pool)
+        .await;
+
+    match res {
+        Ok(_) => (),
+        Err(Error::RowNotFound) => return StatusCode::NOT_FOUND.into_response(),
+        _ => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+    };
+
+    let res = query("SELECT (time, data) FROM submissions WHERE form = ?")
+        .bind(id)
+        .fetch_all(&state.pool)
+        .await;
+
+    let rows = match res {
+        Ok(r) => r,
+        _ => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+    };
+
+    rows.iter().map(|r| r.get("time"));
+
+    StatusCode::OK.into_response()
 }

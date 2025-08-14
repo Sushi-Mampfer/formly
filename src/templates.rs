@@ -36,3 +36,10 @@ pub struct EditFormPage {
     pub id: String,
     pub data: FormDefinition,
 }
+
+#[derive(Template)]
+#[template(path = "edit.html")]
+pub struct FormPage {
+    pub id: String,
+    pub data: FormDefinition,
+}

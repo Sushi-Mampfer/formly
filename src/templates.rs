@@ -1,6 +1,6 @@
 use askama::Template;
 
-use crate::datatypes::{FormDefinition, FormSubmission};
+use crate::datatypes::{FieldKind::*, FormDefinition, FormSubmission};
 
 #[derive(Template)]
 #[template(path = "index.html")]
@@ -38,7 +38,7 @@ pub struct EditFormPage {
 }
 
 #[derive(Template)]
-#[template(path = "edit.html")]
+#[template(path = "form.html")]
 pub struct FormPage {
     pub id: String,
     pub data: FormDefinition,

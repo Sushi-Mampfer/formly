@@ -6,6 +6,22 @@
     <title>Submissions</title>
 </head>
 <body>
-    
+    <h1>{{name}}</h1>
+    {% for submissions in data.submissions %}
+        <div>
+        {% for value in data.values %}
+            {% match value %}
+                {% when Text(name, data) %}
+                    <p><b>{{name}}: </b>data</p>
+                {% when Email(name, data) %}
+                    <p><b>{{name}}: </b>data</p>
+                {% when Number(name, data) %}
+                    <p><b>{{name}}: </b>data</p>
+                {% when Multiple(name, data) %}
+                    <p><b>{{name}}: </b>data</p>
+            {% endmatch %}
+        {% endfor %}
+        </div>
+    {% endfor %}
 </body>
 </html>

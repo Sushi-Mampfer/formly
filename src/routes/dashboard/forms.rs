@@ -177,7 +177,7 @@ pub async fn submissions_page(
         _ => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
     };
 
-    let submissions: Vec<FormSubmission> = match rows
+    let data: Vec<FormSubmission> = match rows
         .iter()
         .map(|r| from_str(r.get("data")))
         .collect::<Result<_, _>>()
@@ -186,5 +186,5 @@ pub async fn submissions_page(
         _ => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
     };
 
-    Html(SubmissionsPage { name, submissions }.render().unwrap()).into_response()
+    Html(SubmissionsPage { name, data }.render().unwrap()).into_response()
 }

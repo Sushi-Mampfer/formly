@@ -7,17 +7,17 @@
 </head>
 <body>
     <h1>{{name}}</h1>
-    {% for submissions in data.submissions %}
+    {% for submissions in data %}
         <div>
-        {% for value in data.values %}
+        {% for value in submissions.values %}
             {% match value %}
-                {% when Text(name, data) %}
+                {% when FieldValue::Text(name, data) %}
                     <p><b>{{name}}: </b>data</p>
-                {% when Email(name, data) %}
+                {% when FieldValue::Email(name, data) %}
                     <p><b>{{name}}: </b>data</p>
-                {% when Number(name, data) %}
+                {% when FieldValue::Number(name, data) %}
                     <p><b>{{name}}: </b>data</p>
-                {% when Multiple(name, data) %}
+                {% when FieldValue::Multiple(name, data) %}
                     <p><b>{{name}}: </b>data</p>
             {% endmatch %}
         {% endfor %}

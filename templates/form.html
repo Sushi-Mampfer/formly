@@ -1,65 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ data.name }}</title>
 </head>
+
 <body>
-    <div id="form">
-    {% for field in data.fields %}
+    <form id="form">
+        {% for field in data.fields %}
         {% match field %}
-            {% when Text(name, len) %}
-                <label for="{{loop.index}}">{{name}}</label>
-                <input type="text" id="{{loop.index}}" maxlength="{{len}}">
-            {% when Email(name) %}
-                <label for="{{loop.index}}">{{name}}</label>
-                <input type="email" id="{{loop.index}}">
-            {% when Number(name, min, max) %}
-                <label for="{{loop.index}}">{{name}}</label>
-                <input type="number" id="{{loop.index}}" min="{{min}}" max="{{max}}">
-            {% when Multiple(name, options) %}
-                <label for="{{loop.index}}">{{name}}</label>
-                <select id="{{loop.index}}">
-                    {% for option in options %}
-                        <option value="{{option}}">{{option}}</option>
-                    {% endfor %}
-                </select>
+        {% when FieldKind::Text(name, len) %}
+        <label for="{{loop.index}}">{{name}}</label>
+        <input type="text" id="{{loop.index}}" maxlength="{{len}}" name="{{name}}" required>
+        {% when FieldKind::Email(name) %}
+        <label for="{{loop.index}}">{{name}}</label>
+        <input type="email" id="{{loop.index}}" name="{{name}}" required>
+        {% when FieldKind::Number(name, min, max) %}
+        <label for="{{loop.index}}">{{name}}</label>
+        <input type="number" id="{{loop.index}}" min="{{min}}" max="{{max}}" name="{{name}}"> required
+        {% when FieldKind::Multiple(name, options) %}
+        <label for="{{loop.index}}">{{name}}</label>
+        <select id="{{loop.index}}" name="{{name}}">
+            {% for option in options %}
+            <option value="{{option}}">{{option}}</option>
+            {% endfor %}
+        </select>
         {% endmatch %}
-    {% endfor %}
-    </div>
-    <button onclick="submit({{id}})">Submit</button>
+        {% endfor %}
+    </form>
+    <button onclick="submit()">Submit</button>
     <script defer>
         const form_container = document.getElementById("form");
-        const url = "https://${window.location.hostname}/form/{{id}}"
+        const url = "/form/{{id}}";
+        const headers = new Headers();
+        headers.append("Content-Type", "application/json")
 
-        function submit(id) {
+        async function submit() {
+            if (!form_container.checkValidity()) {
+                return;
+            }
             var submission = {
                 "values": []
             };
             for (i of form_container.children) {
                 if (i.type == "text") {
-                    submission.values.push({"Text": [i.name, i.value]})
+                    submission.values.push({ "Text": [i.name, i.value] })
                 }
                 if (i.type == "email") {
-                    submission.values.push({"Email": [i.name, i.value]})
+                    submission.values.push({ "Email": [i.name, i.value] })
                 }
                 if (i.type == "number") {
-                    submission.values.push({"Number": [i.name, i.value]})
+                    submission.values.push({ "Number": [i.name, parseInt(i.value)] })
                 }
-                if (i.type == "select") {
-                    submission.values.push({"Multiple": [i.name, i.value]})
+                if (i.type == "select-one") {
+                    submission.values.push({ "Multiple": [i.name, i.value] })
                 }
             }
 
             try {
                 const response = await fetch(url, {
                     method: "POST",
-                    body: JSON.stringify(json)
+                    headers: headers,
+                    body: JSON.stringify(submission)
                 });
-                    if (!response.ok) {
-                        throw new Error(`Response status: ${response.status}`);
-                    }
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
 
                 const result = await response.json();
                 console.log(result);
@@ -69,4 +77,5 @@
         }
     </script>
 </body>
+
 </html>

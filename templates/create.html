@@ -12,6 +12,57 @@
     <input type="text" id="name">
     <form id="form">
 
+
+
+        <div>
+            <p>Text</p>
+            <label for="field-1">Name:</label>
+            <input type="text" id="field-1">
+            <label for="maxlen">Max length</label>
+            <input type="number" id="maxlen">
+            <button onclick="delete_parrent(this, event)">Delete</button>
+        </div>
+
+        <div>
+            <p>Email</p>
+            <label for="field-2">Name:</label>
+            <input type="text" id="field-2">
+            <button onclick="delete_parrent(this, event)">Delete</button>
+        </div>
+
+        <div>
+            <p>Number</p>
+            <label for="field-3">Name:</label>
+            <input type="text" id="field-3">
+            <label for="max">Maximum</label>
+            <input type="number" id="max">
+            <label for="min">Minimum/label&gt;
+                <input type="number" id="min">
+                <button onclick="delete_parrent(this, event)">Delete</button>
+            </label>
+        </div>
+
+        <div>
+            <p>Selection</p>
+            <label for="field-4">Name:</label>
+            <input type="text" id="field-4">
+            <ul>
+
+                <li>
+                    <p>Male</p>
+                    <button onclick="delete_parrent(this, event)">Delete</button>
+                </li>
+
+                <li>
+                    <p>Female</p>
+                    <button onclick="delete_parrent(this, event)">Delete</button>
+                </li>
+            </ul>
+            <input type="text">
+            <button onclick="add(this, event)">Add</button>
+            <button onclick="delete_parrent(this, event)">Delete</button>
+        </div>
+
     </form>
     <select id="select">
         <option value="">-- Select Field to add --</option>
@@ -23,6 +74,9 @@
     <button onclick="create()">Create</button>
     <script defer>
         var count = 0;
+        const url = "/dashboard/create";
+        const headers = new Headers();
+        headers.append("Content-Type", "application/json");
         const form = document.getElementById("form");
         const name = document.getElementById("name");
         const select = document.getElementById("select");
@@ -36,9 +90,9 @@
                     <div>
                         <p>Text</p>
                         <label for="${id}">Name:</label>
-                        <input type="text" id="${id}">
-                        <label for="maxlen">Max length</label>
-                        <input type="number" id="maxlen">
+                        <input type="text" id="${id}" required>
+                        <label for="maxlen-${id}">Max length</label>
+                        <input type="number" id="maxlen-${id}" required>
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;
@@ -46,9 +100,9 @@
             } else if (event.target.value == "email") {
                 const field = `
                     <div>
-                        <p>Number</p>
+                        <p>Email</p>
                         <label for="${id}">Name:</label>
-                        <input type="text" id="${id}">
+                        <input type="text" id="${id}" required>
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;
@@ -59,10 +113,10 @@
                         <p>Number</p>
                         <label for="${id}">Name:</label>
                         <input type="text" id="${id}">
-                        <label for="max">Maximum</label>
-                        <input type="number" id="max">
-                        <label for="min">Minimum/label>
-                        <input type="number" id="min">
+                        <label for="max-${id}">Maximum</label>
+                        <input type="number" id="max-${id}" required>
+                        <label for="min-${id}">Minimum</label>
+                        <input type="number" id="min-${id}" required>
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;
@@ -102,16 +156,40 @@
             list.innerHTML += field;
         }
         async function create() {
+            if (!form.checkValidity()) {
+                return;
+            }
             let output = {
                 "name": name.value,
                 "fields": []
             };
-            output.fields.append
+            for (i of form.children) {
+                console.log(i);
+                const type = i.children[0].innerHTML;
+                if (type == "Text") {
+                    output.fields.push({ "Text": [i.children[2].value, parseInt(i.children[4].value)] });
+                } else if (type == "Email") {
+                    output.fields.push({ "Email": [i.children[2].value] });
+                } else if (type == "Number") {
+                    output.fields.push({
+                        "Number": [i.children[2].value,
+                        parseInt(i.children[4].value),
+                        parseInt(i.children[6].value)
+                        ]
+                    });;
+                } else if (type == "Selection") {
+                    var options = [];
+                    for (j of i.children[3].children) {
+                        options.push(j.children[0].innerHTML);
+                    }
+                    output.fields.push({ "Multiple": [i.children[2].value, options] });
+                }
+            }
             try {
                 const response = await fetch(url, {
                     method: "POST",
                     headers: headers,
-                    body: JSON.stringify(submission)
+                    body: JSON.stringify(output)
                 });
                 if (!response.ok) {
                     throw new Error(`Response status: ${response.status}`);

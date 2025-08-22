@@ -11,58 +11,6 @@
     <label for="name">Name: </label>
     <input type="text" id="name">
     <form id="form">
-
-
-
-        <div>
-            <p>Text</p>
-            <label for="field-1">Name:</label>
-            <input type="text" id="field-1">
-            <label for="maxlen">Max length</label>
-            <input type="number" id="maxlen">
-            <button onclick="delete_parrent(this, event)">Delete</button>
-        </div>
-
-        <div>
-            <p>Email</p>
-            <label for="field-2">Name:</label>
-            <input type="text" id="field-2">
-            <button onclick="delete_parrent(this, event)">Delete</button>
-        </div>
-
-        <div>
-            <p>Number</p>
-            <label for="field-3">Name:</label>
-            <input type="text" id="field-3">
-            <label for="max">Maximum</label>
-            <input type="number" id="max">
-            <label for="min">Minimum/label&gt;
-                <input type="number" id="min">
-                <button onclick="delete_parrent(this, event)">Delete</button>
-            </label>
-        </div>
-
-        <div>
-            <p>Selection</p>
-            <label for="field-4">Name:</label>
-            <input type="text" id="field-4">
-            <ul>
-
-                <li>
-                    <p>Male</p>
-                    <button onclick="delete_parrent(this, event)">Delete</button>
-                </li>
-
-                <li>
-                    <p>Female</p>
-                    <button onclick="delete_parrent(this, event)">Delete</button>
-                </li>
-            </ul>
-            <input type="text">
-            <button onclick="add(this, event)">Add</button>
-            <button onclick="delete_parrent(this, event)">Delete</button>
-        </div>
-
     </form>
     <select id="select">
         <option value="">-- Select Field to add --</option>
@@ -81,6 +29,7 @@
         const name = document.getElementById("name");
         const select = document.getElementById("select");
         select.addEventListener("change", (event) => {
+            event.preventDefault();
             count++;
             const id = `field-${count}`;
             if (event.target.value == "") {
@@ -96,7 +45,7 @@
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;
-                form.innerHTML += field;
+                form.insertAdjacentHTML('beforeend', field);
             } else if (event.target.value == "email") {
                 const field = `
                     <div>
@@ -106,21 +55,21 @@
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;
-                form.innerHTML += field;
+                form.insertAdjacentHTML('beforeend', field);
             } else if (event.target.value == "number") {
                 const field = `
                     <div>
                         <p>Number</p>
                         <label for="${id}">Name:</label>
                         <input type="text" id="${id}">
-                        <label for="max-${id}">Maximum</label>
-                        <input type="number" id="max-${id}" required>
                         <label for="min-${id}">Minimum</label>
                         <input type="number" id="min-${id}" required>
+                        <label for="max-${id}">Maximum</label>
+                        <input type="number" id="max-${id}" required>
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;
-                form.innerHTML += field;
+                form.insertAdjacentHTML('beforeend', field);
             } else if (event.target.value == "multiple") {
                 const field = `
                     <div>
@@ -134,7 +83,7 @@
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;
-                form.innerHTML += field;
+                form.insertAdjacentHTML('beforeend', field);
             }
             event.target.selectedIndex = 0;
         });
@@ -164,19 +113,23 @@
                 "fields": []
             };
             for (i of form.children) {
-                console.log(i);
                 const type = i.children[0].innerHTML;
                 if (type == "Text") {
                     output.fields.push({ "Text": [i.children[2].value, parseInt(i.children[4].value)] });
                 } else if (type == "Email") {
-                    output.fields.push({ "Email": [i.children[2].value] });
+                    output.fields.push({ "Email": i.children[2].value });
                 } else if (type == "Number") {
+                    const min = parseInt(i.children[4].value);
+                    const max = parseInt(i.children[6].value);
+                    if (min > max) {
+                        return;
+                    }
                     output.fields.push({
                         "Number": [i.children[2].value,
-                        parseInt(i.children[4].value),
-                        parseInt(i.children[6].value)
+                        min,
+                        max
                         ]
-                    });;
+                    });
                 } else if (type == "Selection") {
                     var options = [];
                     for (j of i.children[3].children) {

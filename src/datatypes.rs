@@ -37,6 +37,13 @@ pub struct LogInData {
 }
 
 #[derive(Serialize, Deserialize)]
+pub struct FormShort {
+    pub name: String,
+    pub id: String,
+    pub submissions: i32,
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct FormDefinition {
     pub name: String,
     pub fields: Vec<FieldKind>,

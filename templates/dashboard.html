@@ -8,5 +8,16 @@
 <body>
     <p>Welcome {{username}}</p>
     <a href="/logout">Logout</a>
+    <ul>
+        {% for form in forms %}
+        <li>
+            <p>{{form.name}}</p>
+            <p>Submissions: {{form.submissions}}</p>
+            <a href="/dashboard/edit/{{form.id}}">Edit</a>
+            <a href="/dashboard/submissions/{{form.id}}">Submissions</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="/dashboard/create">Create</a>
 </body>
 </html>

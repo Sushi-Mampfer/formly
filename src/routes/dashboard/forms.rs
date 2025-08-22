@@ -100,7 +100,7 @@ pub async fn edit_page(
         _ => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
     };
 
-    EditFormPage { id, data }.render().unwrap().into_response()
+    Html(EditFormPage { id, data }.render().unwrap()).into_response()
 }
 
 pub async fn edit_api(

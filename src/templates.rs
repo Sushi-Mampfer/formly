@@ -1,6 +1,6 @@
 use askama::Template;
 
-use crate::datatypes::{FieldKind, FieldValue, FormDefinition, FormSubmission};
+use crate::datatypes::{FieldKind, FieldValue, FormDefinition, FormShort, FormSubmission};
 
 #[derive(Template)]
 #[template(path = "index.html")]
@@ -24,6 +24,7 @@ pub struct LogInPage {
 #[template(path = "dashboard.html")]
 pub struct DashboardPage {
     pub username: String,
+    pub forms: Vec<FormShort>,
 }
 
 #[derive(Template)]

@@ -19,7 +19,7 @@
         <input type="email" id="{{loop.index}}" name="{{name}}" required>
         {% when FieldKind::Number(name, min, max) %}
         <label for="{{loop.index}}">{{name}}</label>
-        <input type="number" id="{{loop.index}}" min="{{min}}" max="{{max}}" name="{{name}}"> required
+        <input type="number" id="{{loop.index}}" min="{{min}}" max="{{max}}" name="{{name}}" required>
         {% when FieldKind::Multiple(name, options) %}
         <label for="{{loop.index}}">{{name}}</label>
         <select id="{{loop.index}}" name="{{name}}">

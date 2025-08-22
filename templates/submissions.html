@@ -12,13 +12,13 @@
         {% for value in submissions.values %}
             {% match value %}
                 {% when FieldValue::Text(name, data) %}
-                    <p><b>{{name}}: </b>data</p>
+                    <p><b>{{name}}: </b>{{data}}</p>
                 {% when FieldValue::Email(name, data) %}
-                    <p><b>{{name}}: </b>data</p>
+                    <p><b>{{name}}: </b>{{data}}</p>
                 {% when FieldValue::Number(name, data) %}
-                    <p><b>{{name}}: </b>data</p>
+                    <p><b>{{name}}: </b>{{data}}</p>
                 {% when FieldValue::Multiple(name, data) %}
-                    <p><b>{{name}}: </b>data</p>
+                    <p><b>{{name}}: </b>{{data}}</p>
             {% endmatch %}
         {% endfor %}
         </div>

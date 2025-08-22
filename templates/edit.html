@@ -6,6 +6,199 @@
     <title>Edit Form</title>
 </head>
 <body>
-    
+    <label for="name">Name: </label>
+    <input type="text" id="name" value="{{data.name}}">
+    <form id="form">
+        {% for field in data.fields %}
+        {% match field %}
+        {% when FieldKind::Text(name, len) %}
+        <div>
+            <p>Text</p>
+            <label for="field-{{loop.index}}">Name:</label>
+            <input type="text" id="field-{{loop.index}}" value="{{name}}">
+            <label for="max-{{loop.index}}">Max length</label>
+            <input type="number" id="max-{{loop.index}}" value="{{len}}">
+            <button onclick="delete_parrent(this, event)">Delete</button>
+        </div>
+        {% when FieldKind::Email(name) %}
+        <div>
+            <p>Email</p>
+            <label for="field-{{loop.index}}">Name:</label>
+            <input type="text" id="field-{{loop.index}}" value="{{name}}">
+            <button onclick="delete_parrent(this, event)">Delete</button>
+        </div>
+        {% when FieldKind::Number(name, min, max) %}
+        <div>
+            <p>Number</p>
+            <label for="field-{{loop.index}}">Name:</label>
+            <input type="text" id="field-{{loop.index}}" value="{{name}}">
+            <label for="min-{{loop.index}}">Minimum</label>
+            <input type="number" id="min-{{loop.index}}" value="{{min}}">
+            <label for="max-{{loop.index}}">Maximum</label>
+            <input type="number" id="max-{{loop.index}}" value="{{max}}">
+            <button onclick="delete_parrent(this, event)">Delete</button>
+        </div>
+        {% when FieldKind::Multiple(name, options) %}
+        <div>
+            <p>Selection</p>
+            <label for="field-{{loop.index}}">Name:</label>
+            <input type="text" id="field-{{loop.index}}" value="{{name}}">
+            <ul>
+                {% for option in options %}
+                <li>
+                    <p>{{option}}</p>
+                    <button onclick="delete_parrent(this, event)">Delete</button>
+                </li>
+                {% endfor %}
+            </ul>
+            <input type="text">
+            <button onclick="add(this, event)">Add</button>
+            <button onclick="delete_parrent(this, event)">Delete</button>
+        </div>
+        {% endmatch %}
+        {% endfor %}
+    </form>
+    <select id="select">
+        <option value="">-- Select Field to add --</option>
+        <option value="text">Text</option>
+        <option value="email">Email</option>
+        <option value="number">Number</option>
+        <option value="multiple">Selection</option>
+    </select>
+    <button onclick="edit()">Edit</button>
+    <script defer>
+        var count = 0;
+        const url = "/dashboard/edit/{{id}}";
+        const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        const form = document.getElementById("form");
+        const name = document.getElementById("name");
+        const select = document.getElementById("select");
+        select.addEventListener("change", (event) => {
+            event.preventDefault();
+            count++;
+            const id = `field-${count}`;
+            if (event.target.value == "") {
+                return;
+            } else if (event.target.value == "text") {
+                const field = `
+                    <div>
+                        <p>Text</p>
+                        <label for="${id}">Name:</label>
+                        <input type="text" id="${id}" required>
+                        <label for="maxlen-${id}">Max length</label>
+                        <input type="number" id="maxlen-${id}" required>
+                        <button onclick="delete_parrent(this, event)">Delete</button>
+                    </div>
+                `;
+                form.insertAdjacentHTML('beforeend', field);
+            } else if (event.target.value == "email") {
+                const field = `
+                    <div>
+                        <p>Email</p>
+                        <label for="${id}">Name:</label>
+                        <input type="text" id="${id}" required>
+                        <button onclick="delete_parrent(this, event)">Delete</button>
+                    </div>
+                `;
+                form.insertAdjacentHTML('beforeend', field);
+            } else if (event.target.value == "number") {
+                const field = `
+                    <div>
+                        <p>Number</p>
+                        <label for="${id}">Name:</label>
+                        <input type="text" id="${id}">
+                        <label for="min-${id}">Minimum</label>
+                        <input type="number" id="min-${id}" required>
+                        <label for="max-${id}">Maximum</label>
+                        <input type="number" id="max-${id}" required>
+                        <button onclick="delete_parrent(this, event)">Delete</button>
+                    </div>
+                `;
+                form.insertAdjacentHTML('beforeend', field);
+            } else if (event.target.value == "multiple") {
+                const field = `
+                    <div>
+                        <p>Selection</p>
+                        <label for="${id}">Name:</label>
+                        <input type="text" id="${id}">
+                        <ul>
+                        </ul>
+                        <input type="text">
+                        <button onclick="add(this, event)">Add</button>
+                        <button onclick="delete_parrent(this, event)">Delete</button>
+                    </div>
+                `;
+                form.insertAdjacentHTML('beforeend', field);
+            }
+            event.target.selectedIndex = 0;
+        });
+
+        function delete_parrent(element, event) {
+            event.preventDefault();
+            element.parentElement.remove();
+        }
+        function add(element, event) {
+            event.preventDefault();
+            const input = element.parentElement.children[element.parentElement.children.length - 3];
+            const list = element.parentElement.children[3];
+            const field = `
+                <li>
+                    <p>${input.value}</p>
+                    <button onclick="delete_parrent(this, event)">Delete</button>
+                </li>
+            `;
+            list.innerHTML += field;
+        }
+        async function edit() {
+            if (!form.checkValidity()) {
+                return;
+            }
+            let output = {
+                "name": name.value,
+                "fields": []
+            };
+            for (i of form.children) {
+                const type = i.children[0].innerHTML;
+                if (type == "Text") {
+                    output.fields.push({ "Text": [i.children[2].value, parseInt(i.children[4].value)] });
+                } else if (type == "Email") {
+                    output.fields.push({ "Email": i.children[2].value });
+                } else if (type == "Number") {
+                    const min = parseInt(i.children[4].value);
+                    const max = parseInt(i.children[6].value);
+                    if (min > max) {
+                        return;
+                    }
+                    output.fields.push({
+                        "Number": [i.children[2].value,
+                        min,
+                        max
+                        ]
+                    });
+                } else if (type == "Selection") {
+                    var options = [];
+                    for (j of i.children[3].children) {
+                        options.push(j.children[0].innerHTML);
+                    }
+                    output.fields.push({ "Multiple": [i.children[2].value, options] });
+                }
+            }
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: headers,
+                    body: JSON.stringify(output)
+                });
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+
+                await response.json();
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+    </script>
 </body>
 </html>

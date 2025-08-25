@@ -18,3 +18,4 @@ serde_json = "1.0.142"
 sha2 = "0.10.9"
 sqlx = { version = "0.8.6", features = ["runtime-tokio", "sqlite"] }
 tokio = { version = "1.47.1", features = ["rt-multi-thread"] }
+tower-http = { version = "0.6.6", features = ["fs"] }

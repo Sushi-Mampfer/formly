@@ -6,6 +6,7 @@ mod logout;
 mod signup;
 
 use axum::{Router, routing::get};
+use tower_http::services::ServeDir;
 
 use crate::{
     datatypes::AppState,
@@ -27,5 +28,6 @@ pub fn combind_routes(state: AppState) -> Router {
         .route("/form/{id}", get(form_page).post(form_api))
         .route("/", get(index_page))
         .nest("/dashboard", dashboard_router(state.clone()))
+        .nest_service("/static", ServeDir::new("static"))
         .with_state(state)
 }

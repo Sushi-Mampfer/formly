@@ -1,0 +1,77 @@
+* {
+    margin: 0;
+    padding: 0;
+    color: oklch(0.92 0.004 286.32);
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    grid-template-rows: auto 1fr;
+    height: calc(100% - 4rem);
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: repeat(12, 3fr);
+    grid-auto-rows: auto;
+    background-color: oklch(0.274 0.006 286.033);
+}
+
+input, button, select {
+    background-color: oklch(0.442 0.017 285.786);
+}
+
+#form {
+    grid-column: 3 / 10;
+    grid-row: 2;
+}
+
+body > label {
+    font-size: 2rem;
+    height: 3rem;
+    text-align: center;
+    grid-column: 1 / 1;
+    grid-row: 1;
+    line-height: 3rem;
+}
+
+body > input:focus {
+    outline: none;
+}
+
+body > input {
+    border-radius: 2.5rem;
+    margin: .25rem;
+    border: 0;
+    height: 2.5rem;
+    text-align: center;
+    grid-column: 2 / 2;
+    grid-row: 1;
+}
+
+body > button {
+    border-radius: calc(3rem - 4px);
+    border: 2px outset oklch(0.705 0.015 286.067);
+    height: calc(3rem - 4px);
+    grid-column: 12 / 12;
+    grid-row: 1;
+}
+
+body > button:hover {
+    border: 2px outset oklch(0.552 0.016 285.938);
+}
+
+body > button:active {
+    background-color: oklch(0.37 0.013 285.805);
+}
+
+body > select {
+    border-radius: 2.5rem;
+    margin: .25rem;
+    border: 0;
+    height: 2.5rem;
+    text-align: center;
+    grid-column: 11 / 11;
+    grid-row: 1;
+}

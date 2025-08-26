@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/edit.css">
+    <link rel="stylesheet" href="/static/create.css">
     <title>Edit Form</title>
 </head>
 <body>
@@ -15,36 +15,36 @@
         {% when FieldKind::Text(name, len) %}
         <div>
             <p>Text</p>
-            <label for="field-{{loop.index}}">Name:</label>
-            <input type="text" id="field-{{loop.index}}" value="{{name}}">
-            <label for="max-{{loop.index}}">Max length</label>
-            <input type="number" id="max-{{loop.index}}" value="{{len}}">
+            <label for="field-{{loop.index}}" class="r2">Name:</label>
+            <input type="text" id="field-{{loop.index}}" value="{{name}}" class="r2" required>
+            <label for="max-{{loop.index}}" class="r3">Max length</label>
+            <input type="number" id="max-{{loop.index}}" value="{{len}}" class="r3" required>
             <button onclick="delete_parrent(this, event)">Delete</button>
         </div>
         {% when FieldKind::Email(name) %}
         <div>
             <p>Email</p>
-            <label for="field-{{loop.index}}">Name:</label>
-            <input type="text" id="field-{{loop.index}}" value="{{name}}">
+            <label for="field-{{loop.index}}" class="r2">Name:</label>
+            <input type="text" id="field-{{loop.index}}" value="{{name}}" class="r2" required>
             <button onclick="delete_parrent(this, event)">Delete</button>
         </div>
         {% when FieldKind::Number(name, min, max) %}
         <div>
             <p>Number</p>
-            <label for="field-{{loop.index}}">Name:</label>
-            <input type="text" id="field-{{loop.index}}" value="{{name}}">
-            <label for="min-{{loop.index}}">Minimum</label>
-            <input type="number" id="min-{{loop.index}}" value="{{min}}">
-            <label for="max-{{loop.index}}">Maximum</label>
-            <input type="number" id="max-{{loop.index}}" value="{{max}}">
+            <label for="field-{{loop.index}}" class="r2">Name:</label>
+            <input type="text" id="field-{{loop.index}}" value="{{name}}" class="r2" required>
+            <label for="min-{{loop.index}}" class="r3">Minimum</label>
+            <input type="number" id="min-{{loop.index}}" value="{{min}}" class="r3" required>
+            <label for="max-{{loop.index}}" class="r4">Maximum</label>
+            <input type="number" id="max-{{loop.index}}" value="{{max}}" class="r4" required>
             <button onclick="delete_parrent(this, event)">Delete</button>
         </div>
         {% when FieldKind::Multiple(name, options) %}
         <div>
             <p>Selection</p>
-            <label for="field-{{loop.index}}">Name:</label>
-            <input type="text" id="field-{{loop.index}}" value="{{name}}">
-            <ul>
+            <label for="field-{{loop.index}}" class="r2">Name:</label>
+            <input type="text" id="field-{{loop.index}}" value="{{name}}" class="r2">
+            <ul class="r3">
                 {% for option in options %}
                 <li>
                     <p>{{option}}</p>
@@ -52,8 +52,9 @@
                 </li>
                 {% endfor %}
             </ul>
-            <input type="text">
-            <button onclick="add(this, event)">Add</button>
+            <label for="add-{{loop.index}}" class="r4">Option:</label>
+            <input type="text" id="add-{{loop.index}}" class="r4">
+            <button onclick="add(this, event)" class="r4 c4">Add</button>
             <button onclick="delete_parrent(this, event)">Delete</button>
         </div>
         {% endmatch %}
@@ -85,10 +86,10 @@
                 const field = `
                     <div>
                         <p>Text</p>
-                        <label for="${id}">Name:</label>
-                        <input type="text" id="${id}" required>
-                        <label for="maxlen-${id}">Max length</label>
-                        <input type="number" id="maxlen-${id}" required>
+                        <label for="${id}" class="r2">Name:</label>
+                        <input type="text" id="${id}" class="r2" required>
+                        <label for="maxlen-${id}" class="r3">Max length:</label>
+                        <input type="number" id="maxlen-${id}" class="r3" required>
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;
@@ -97,8 +98,8 @@
                 const field = `
                     <div>
                         <p>Email</p>
-                        <label for="${id}">Name:</label>
-                        <input type="text" id="${id}" required>
+                        <label for="${id}" class="r2">Name:</label>
+                        <input type="text" id="${id}" class="r2" required>
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;
@@ -107,12 +108,12 @@
                 const field = `
                     <div>
                         <p>Number</p>
-                        <label for="${id}">Name:</label>
-                        <input type="text" id="${id}">
-                        <label for="min-${id}">Minimum</label>
-                        <input type="number" id="min-${id}" required>
-                        <label for="max-${id}">Maximum</label>
-                        <input type="number" id="max-${id}" required>
+                        <label for="${id}" class="r2">Name:</label>
+                        <input type="text" id="${id}" class="r2" required>
+                        <label for="min-${id}" class="r3">Minimum</label>
+                        <input type="number" id="min-${id}" class="r3" required>
+                        <label for="max-${id}" class="r4">Maximum</label>
+                        <input type="number" id="max-${id}" class="r4" required>
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;
@@ -121,12 +122,13 @@
                 const field = `
                     <div>
                         <p>Selection</p>
-                        <label for="${id}">Name:</label>
-                        <input type="text" id="${id}">
-                        <ul>
+                        <label for="${id}" class="r2">Name:</label>
+                        <input type="text" id="${id}" class="r2" required>
+                        <ul class="r3">
                         </ul>
-                        <input type="text">
-                        <button onclick="add(this, event)">Add</button>
+                        <label for="add-${id}" class="r4">Option:</label>
+                        <input type="text" id="add-${id}" class="r4">
+                        <button onclick="add(this, event)" class="r4 c4">Add</button>
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;

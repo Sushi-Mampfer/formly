@@ -39,10 +39,10 @@
                 const field = `
                     <div>
                         <p>Text</p>
-                        <label for="${id}">Name:</label>
-                        <input type="text" id="${id}" required>
-                        <label for="maxlen-${id}">Max length</label>
-                        <input type="number" id="maxlen-${id}" required>
+                        <label for="${id}" class="r2">Name:</label>
+                        <input type="text" id="${id}" class="r2" required>
+                        <label for="maxlen-${id}" class="r3">Max length:</label>
+                        <input type="number" id="maxlen-${id}" class="r3" required>
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;
@@ -51,8 +51,8 @@
                 const field = `
                     <div>
                         <p>Email</p>
-                        <label for="${id}">Name:</label>
-                        <input type="text" id="${id}" required>
+                        <label for="${id}" class="r2">Name:</label>
+                        <input type="text" id="${id}" class="r2" required>
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;
@@ -61,12 +61,12 @@
                 const field = `
                     <div>
                         <p>Number</p>
-                        <label for="${id}">Name:</label>
-                        <input type="text" id="${id}">
-                        <label for="min-${id}">Minimum</label>
-                        <input type="number" id="min-${id}" required>
-                        <label for="max-${id}">Maximum</label>
-                        <input type="number" id="max-${id}" required>
+                        <label for="${id}" class="r2">Name:</label>
+                        <input type="text" id="${id}" class="r2" required>
+                        <label for="min-${id}" class="r3">Minimum</label>
+                        <input type="number" id="min-${id}" class="r3" required>
+                        <label for="max-${id}" class="r4">Maximum</label>
+                        <input type="number" id="max-${id}" class="r4" required>
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;
@@ -75,12 +75,13 @@
                 const field = `
                     <div>
                         <p>Selection</p>
-                        <label for="${id}">Name:</label>
-                        <input type="text" id="${id}">
-                        <ul>
+                        <label for="${id}" class="r2">Name:</label>
+                        <input type="text" id="${id}" class="r2" required>
+                        <ul class="r3">
                         </ul>
-                        <input type="text">
-                        <button onclick="add(this, event)">Add</button>
+                        <label for="add-${id}" class="r4">Option:</label>
+                        <input type="text" id="add-${id}" class="r4">
+                        <button onclick="add(this, event)" class="r4 c4">Add</button>
                         <button onclick="delete_parrent(this, event)">Delete</button>
                     </div>
                 `;

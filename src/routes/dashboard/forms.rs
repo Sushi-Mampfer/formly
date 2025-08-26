@@ -188,3 +188,31 @@ pub async fn submissions_page(
 
     Html(SubmissionsPage { name, data }.render().unwrap()).into_response()
 }
+
+pub async fn delete_api(
+    State(state): State<AppState>,
+    headers: HeaderMap,
+    Path(id): Path<String>,
+) -> Response {
+    let username = match headers_to_user(headers) {
+        Some(u) => u,
+        None => return StatusCode::UNAUTHORIZED.into_response(),
+    };
+
+    let res = query("DELETE FROM forms WHERE user = ? AND id = ?")
+        .bind(username)
+        .bind(id)
+        .execute(&state.pool)
+        .await;
+
+    match res {
+        Ok(r) => {
+            if r.rows_affected() > 0 {
+                StatusCode::OK.into_response()
+            } else {
+                StatusCode::NOT_FOUND.into_response()
+            }
+        }
+        Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+    }
+}

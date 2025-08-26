@@ -1,24 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/dashboard.css">
     <title>Dashboard</title>
 </head>
+
 <body>
     <p>Welcome {{username}}</p>
-    <a href="/logout">Logout</a>
+    <a href="/logout" id="logout">Logout</a>
     <ul>
         {% for form in forms %}
         <li>
-            <p>{{form.name}}</p>
-            <p>Submissions: {{form.submissions}}</p>
-            <a href="/dashboard/edit/{{form.id}}">Edit</a>
-            <a href="/dashboard/submissions/{{form.id}}">Submissions</a>
+            <h3 class="name">{{form.name}}</h3>
+            <p class="submissions">Submissions: {{form.submissions}}</p>
+            <a href="/dashboard/edit/{{form.id}}" class="edit">Edit</a>
+            <a href="/dashboard/submissions/{{form.id}}" class="submit">Submissions</a>
+            <button onclick="copy('{{form.id}}')" class="copy">Copy</button>
+            <button onclick="dlt(this, '{{form.id}}')" class="delete">Delete</button>
         </li>
         {% endfor %}
     </ul>
-    <a href="/dashboard/create">Create</a>
+    <a href="/dashboard/create" id="create">Create</a>
+    <script defer>
+        const url = "/dashboard/delete/"
+        async function dlt(element, id) {
+            try {
+                const response = await fetch(url + id, { method: "POST" });
+                if (response.ok) {
+                    element.parentElement.remove();
+                }
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+        function copy(id) {
+            navigator.clipboard.writeText(location.protocol + '//' + location.host + `/form/${id}`)
+        }
+    </script>
 </body>
+
 </html>

@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/submissions.css">
     <title>Submissions</title>
 </head>
+
 <body>
     <h1>{{name}}</h1>
-    {% for submissions in data %}
+    <div id="submissions">
+        {% for submissions in data %}
         <div>
-        {% for value in submissions.values %}
+            {% for value in submissions.values %}
             {% match value %}
-                {% when FieldValue::Text(name, data) %}
-                    <p><b>{{name}}: </b>{{data}}</p>
-                {% when FieldValue::Email(name, data) %}
-                    <p><b>{{name}}: </b>{{data}}</p>
-                {% when FieldValue::Number(name, data) %}
-                    <p><b>{{name}}: </b>{{data}}</p>
-                {% when FieldValue::Multiple(name, data) %}
-                    <p><b>{{name}}: </b>{{data}}</p>
+            {% when FieldValue::Text(name, data) %}
+            <p><b>{{name}}: </b>{{data}}</p>
+            {% when FieldValue::Email(name, data) %}
+            <p><b>{{name}}: </b>{{data}}</p>
+            {% when FieldValue::Number(name, data) %}
+            <p><b>{{name}}: </b>{{data}}</p>
+            {% when FieldValue::Multiple(name, data) %}
+            <p><b>{{name}}: </b>{{data}}</p>
             {% endmatch %}
-        {% endfor %}
+            {% endfor %}
         </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 </body>
+
 </html>

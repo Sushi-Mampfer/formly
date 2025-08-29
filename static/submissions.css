@@ -1,0 +1,49 @@
+* {
+    margin: 0;
+    padding: 0;
+    color: oklch(0.92 0.004 286.32);
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: calc(100% - 4rem);
+    padding: 2rem;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: repeat(12, calc(calc(100% - 4rem) / 12));
+    grid-auto-rows: auto;
+    background-color: oklch(0.274 0.006 286.033);
+}
+
+h1 {
+    grid-row: 1;
+    grid-column: 3/11;
+    text-align: center;
+    height: 3rem;
+    font-size: 2rem;
+    line-height: 3rem;
+}
+
+#submissions {
+    grid-column: 3 / 11;
+    grid-row: 2;
+}
+
+#submissions>div {
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 1rem;
+    display: grid;
+    grid-template-columns: repeat(8, calc(100% / 8));
+    background-color: oklch(0.37 0.013 285.805);
+}
+
+#submissions>div>p {
+    grid-column: 2 / 8;
+    height: 3rem;
+    line-height: 3rem;
+}

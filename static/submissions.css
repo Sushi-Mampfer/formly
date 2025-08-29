@@ -47,3 +47,27 @@ h1 {
     height: 3rem;
     line-height: 3rem;
 }
+
+a {
+    box-sizing: content-box;
+    margin: .25rem;
+    border-radius: calc(2.5rem - 4px);
+    border: 2px outset oklch(0.552 0.016 285.938);
+    height: calc(2.5rem - 4px);
+    font-size: 1rem;
+    line-height: calc(2.5rem - 4px);
+    font-size: 1.25rem;
+    text-align: center;
+    text-decoration: none;
+    grid-row: 1;
+    grid-column: 12;
+    background-color: oklch(0.442 0.017 285.786);
+}
+
+a:hover {
+    border: 2px outset oklch(0.442 0.017 285.786);
+}
+
+a:active {
+    background-color: oklch(0.37 0.013 285.805);
+}

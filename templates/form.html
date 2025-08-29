@@ -72,8 +72,11 @@
                 if (!response.ok) {
                     throw new Error(`Response status: ${response.status}`);
                 }
-
-                await response.json();
+                form_container.innerHTML = `
+                <h2>Successfully submitted</h2>
+                <span><a href="/">Make your own form</a></span>
+                `;
+                document.querySelector("button").remove();
             } catch (error) {
                 console.error(error.message);
             }

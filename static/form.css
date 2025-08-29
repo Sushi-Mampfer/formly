@@ -1,0 +1,114 @@
+* {
+    margin: 0;
+    padding: 0;
+    color: oklch(0.92 0.004 286.32);
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: calc(100% - 4rem);
+    padding: 2rem;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: repeat(12, calc(calc(100% - 4rem) / 12));
+    grid-auto-rows: auto;
+    background-color: oklch(0.274 0.006 286.033);
+}
+
+input,
+button,
+select,
+a {
+    border: 0;
+    background-color: oklch(0.442 0.017 285.786);
+}
+
+input:focus,
+button:focus,
+select:focus {
+    outline: none;
+}
+
+a,
+button {
+    box-sizing: content-box;
+    margin: .25rem;
+    border-radius: calc(2.5rem - 4px);
+    border: 2px outset oklch(0.552 0.016 285.938);
+    height: calc(2.5rem - 4px);
+    font-size: 1rem;
+    line-height: calc(2.5rem - 4px);
+    font-size: 1.25rem;
+    text-align: center;
+    text-decoration: none;
+}
+
+button:hover,
+a:hover {
+    border: 2px outset oklch(0.442 0.017 285.786);
+}
+
+button:active,
+a:active {
+    background-color: oklch(0.37 0.013 285.805);
+}
+
+body > h1 {
+    grid-row: 1;
+    grid-column: 3/11;
+    height: 3rem;
+    line-height: 3rem;
+    font-size: 3rem;
+    text-align: center;
+}
+
+body > button {
+    grid-row: 1;
+    grid-column: 12;
+}
+
+#form>div {
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 1rem;
+    display: grid;
+    grid-template-columns: repeat(6, calc(100% / 6));
+    background-color: oklch(0.37 0.013 285.805);
+}
+
+#form {
+    grid-column: 4 / 10;
+    grid-row: 2;
+}
+
+#form > div > label {
+    grid-row: 1;
+    grid-column: 2;
+    text-align: right;
+    height: 3rem;
+    line-height: 3rem;
+    padding-right: .5rem;
+}
+
+#form>div>input, #form>div>select {
+    border-radius: 2.5rem;
+    margin: .25rem;
+    height: 2.5rem;
+    text-align: center;
+    grid-column: 3/5;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    appearance: textfield;
+}
+

@@ -47,17 +47,6 @@ button {
     text-decoration: none;
 }
 
-button {
-    box-sizing: content-box;
-    margin: .25rem;
-    border-radius: calc(2.5rem - 4px);
-    border: 2px outset oklch(0.552 0.016 285.938);
-    height: calc(2.5rem - 4px);
-    font-size: 1rem;
-    line-height: calc(2.5rem - 4px);
-    font-size: 1.25rem;
-}
-
 button:hover,
 a:hover {
     border: 2px outset oklch(0.442 0.017 285.786);
@@ -105,11 +94,11 @@ body>ul>li {
 
 .edit {
     grid-row: 1;
-    grid-column: 5;
+    grid-column: 6;
 }
 
 .delete {
-    grid-row: 1;
+    grid-row: 2;
     grid-column: 6;
 }
 
@@ -130,10 +119,10 @@ body>ul>li {
 
 .submit {
     grid-row: 2;
-    grid-column: 5;
+    grid-column: 4/6;
 }
 
 .copy {
-    grid-row: 2;
-    grid-column: 6;
+    grid-row: 1;
+    grid-column: 4/6;
 }

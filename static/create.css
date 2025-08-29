@@ -142,7 +142,7 @@ body>select {
     margin: .25rem;
     height: 2.5rem;
     text-align: center;
-    grid-column: 3;
+    grid-column: 3/5;
 }
 
 #form>div>ul {

@@ -196,8 +196,8 @@
                 if (!response.ok) {
                     throw new Error(`Response status: ${response.status}`);
                 }
-
-                await response.json();
+                navigator.clipboard.writeText(location.protocol + '//' + location.host + '/form/{{id}}');
+                window.location.href = "/dashboard"; 
             } catch (error) {
                 console.error(error.message);
             }

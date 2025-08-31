@@ -150,7 +150,9 @@
                     throw new Error(`Response status: ${response.status}`);
                 }
 
-                await response.json();
+                const id = await response.text;
+                navigator.clipboard.writeText(location.protocol + '//' + location.host + `/form/${id}`);
+                window.location.href = `/dashboard`; 
             } catch (error) {
                 console.error(error.message);
             }

@@ -1,0 +1,93 @@
+* {
+    margin: 0;
+    padding: 0;
+    color: oklch(0.92 0.004 286.32);
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    padding: 2rem;
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    grid-template-columns: repeat(12, calc(100% / 12));
+    grid-auto-rows: auto;
+    background-color: oklch(0.274 0.006 286.033);
+}
+
+a,
+button,
+input[type="submit"] {
+    box-sizing: content-box;
+    margin: .25rem;
+    border-radius: calc(2.5rem - 4px);
+    border: 2px outset oklch(0.552 0.016 285.938);
+    height: calc(2.5rem - 4px);
+    font-size: 1rem;
+    line-height: calc(2.5rem - 4px);
+    font-size: 1.25rem;
+    text-align: center;
+    text-decoration: none;
+    background-color: oklch(0.442 0.017 285.786);
+}
+
+button:hover,
+a:hover,
+input[type="submit"]:hover {
+    border: 2px outset oklch(0.442 0.017 285.786);
+}
+
+button:active,
+a:active,
+input[type="submit"]:active {
+    background-color: oklch(0.37 0.013 285.805);
+}
+
+input,
+select {
+    border: 0;
+    background-color: oklch(0.442 0.017 285.786);
+}
+
+input:focus,
+button:focus,
+select:focus {
+    outline: none;
+}
+
+form {
+    grid-row: 3;
+    grid-column: 3/11;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 1rem;
+    display: grid;
+    row-gap: 1rem;
+    grid-template-columns: repeat(8, calc(100% / 8));
+    background-color: oklch(0.37 0.013 285.805);
+}
+
+form>* {
+    grid-column: 2/8;
+}
+
+form>input:not([type="submit"]) {
+    height: 3rem;
+    border-radius: 1.5rem;
+    line-height: 3rem;
+    text-align: center;
+    font-size: 1.25rem;
+}
+
+.docs {
+    grid-row: 1;
+    grid-column: 11;
+}
+
+.switch {
+    grid-row: 1;
+    grid-column: 12;
+}

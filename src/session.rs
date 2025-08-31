@@ -7,7 +7,6 @@ use base64::{Engine as _, engine::general_purpose::URL_SAFE};
 use crate::{CIPHER, NONCE};
 
 pub fn headers_to_user(headers: HeaderMap) -> Option<String> {
-    return Some("sushi".to_string());
     let ip = match headers
         .get("X-Forwarded-For")
         .expect("X-Forwarded-For header not found.")

@@ -18,14 +18,9 @@ pub fn headers_to_user(headers: HeaderMap) -> Option<String> {
 
     if let Some(h) = headers.get("Cookie") {
         for i in h.to_str().ok()?.split("; ") {
-            let cookie: Vec<&str> = i.split("=").collect();
-            match cookie.len() {
-                2 => {
-                    if cookie[0] == "session" {
-                        return session_to_user(String::from(cookie[1]), ip);
-                    }
-                }
-                _ => return None,
+            let cookie = i.split_once("=")?;
+            if cookie.0 == "session" {
+                return session_to_user(String::from(cookie.1), ip);
             }
         }
     }

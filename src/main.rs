@@ -4,7 +4,7 @@ mod routes;
 mod session;
 mod templates;
 
-use std::sync::LazyLock;
+use std::{env, sync::LazyLock};
 
 use aes_gcm::{
     AeadCore, Aes256Gcm, KeyInit, Nonce,
@@ -36,6 +36,11 @@ async fn main() {
 
     let app = Router::new().merge(combind_routes(state));
 
-    let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
+    let listener = TcpListener::bind(format!(
+        "127.0.0.1:{}",
+        env::var("PORT").unwrap_or_else(|_| "8080".to_string())
+    ))
+    .await
+    .unwrap();
     axum::serve(listener, app).await.unwrap();
 }
